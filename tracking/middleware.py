@@ -12,7 +12,7 @@ except ImportError:
     MiddlewareMixin = object
 
 from tracking.models import Visitor, Pageview
-from tracking.utils import get_ip_address, total_seconds
+from tracking.utils import get_ip_address, total_seconds, get_visitor_pk
 from tracking.settings import (
     TRACK_AJAX_REQUESTS,
     TRACK_ANONYMOUS_USERS,
@@ -82,7 +82,7 @@ class VisitorTrackingMiddleware(MiddlewareMixin):
 
     def _refresh_visitor(self, user, request, visit_time):
         # A Visitor row is unique by session_key
-        session_key = request.session.session_key
+        session_key = get_visitor_pk(request)
 
         try:
             visitor = Visitor.objects.get(pk=session_key)

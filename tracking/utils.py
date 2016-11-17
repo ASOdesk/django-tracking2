@@ -2,6 +2,7 @@ from __future__ import division
 
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_ipv46_address
+from .models import Visitor
 
 headers = (
     'HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED',
@@ -25,3 +26,7 @@ def get_ip_address(request):
 def total_seconds(delta):
     day_seconds = (delta.days * 24 * 3600) + delta.seconds
     return (delta.microseconds + day_seconds * 10**6) / 10**6
+
+
+def get_visitor_pk(request):
+    return request.session.session_key[:Visitor._meta.get_field('session_key').max_length]
